@@ -24,3 +24,33 @@ export const LoginUserDTO = z.object({
 });
 
 export type LoginUserDTO = z.infer<typeof LoginUserDTO>;
+// Admin DTOs
+export const AdminCreateUserDTO = UserSchema.pick({
+  firstName: true,
+  lastName: true,
+  email: true,
+  username: true,
+  password: true,
+  role: true,
+});
+
+export type AdminCreateUserDTO = z.infer<typeof AdminCreateUserDTO>;
+
+export const AdminUpdateUserDTO = UserSchema.pick({
+  firstName: true,
+  lastName: true,
+  email: true,
+  username: true,
+  role: true,
+}).partial();
+
+export type AdminUpdateUserDTO = z.infer<typeof AdminUpdateUserDTO>;
+
+export const UpdateProfileDTO = z.object({
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
+  email: z.string().email().optional(),
+  username: z.string().min(1).optional(),
+});
+
+export type UpdateProfileDTO = z.infer<typeof UpdateProfileDTO>;
