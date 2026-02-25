@@ -1,12 +1,23 @@
 import mongoose from "mongoose";
-import { MONGODB_URI } from "../config";
+import { MongoMemoryServer } from "mongodb-memory-server";
 
-export async function connectDatabase(){
-    try {
-        await mongoose.connect(MONGODB_URI);
-        console.log("Connected to MongoDB");
-    } catch (error) {
-        console.error("Database Error:", error);
-        process.exit(1); 
+let memoryServer: MongoMemoryServer | null = null;
+
+export const connectDatabase = async () => {
+  const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/recipefinder";
+
+  try {
+    await mongoose.connect(MONGO_URI);
+    console.log(`✅ MongoDB connected successfully (${MONGO_URI})`);
+  } catch (error) {
+    console.warn("⚠️ MongoDB connection failed. Falling back to in-memory MongoDB.");
+
+    if (!memoryServer) {
+      memoryServer = await MongoMemoryServer.create();
     }
-}
+
+    const inMemoryUri = memoryServer.getUri("recipefinder");
+    await mongoose.connect(inMemoryUri);
+    console.log("✅ In-memory MongoDB started for local development");
+  }
+};
