@@ -19,6 +19,7 @@ const toRecipeResponse = (recipe: any) => {
     description: recipe.description,
     imageUrl: recipe.image,
     authorName: getAuthorName(author),
+    authorImageUrl: author.image || "",
     authorUsername: author.username || "unknown",
     authorEmail: author.email || "",
     createdAt: recipe.createdAt,
@@ -137,14 +138,21 @@ export class RecipeController {
         });
       }
 
-      if (!parsed.data.title && !parsed.data.description) {
+      const imagePath = req.file ? `/uploads/recipe/${req.file.filename}` : undefined;
+
+      if (!parsed.data.title && !parsed.data.description && !imagePath) {
         return res.status(400).json({
           success: false,
           message: "At least one field is required",
         });
       }
 
-      const updatedRecipe = await recipeService.updateRecipe(req.params.id, req.user.id, parsed.data);
+      const updatedRecipe = await recipeService.updateRecipe(
+        req.params.id,
+        req.user.id,
+        parsed.data,
+        imagePath,
+      );
 
       return res.status(200).json({
         success: true,
