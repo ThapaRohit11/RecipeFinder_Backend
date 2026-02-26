@@ -20,7 +20,7 @@ export class FavoriteRepository {
     return FavoriteModel.find({ userId })
       .populate({
         path: "recipeId",
-        populate: { path: "createdBy", select: "username firstName lastName email" },
+        populate: { path: "createdBy", select: "username firstName lastName email image" },
       })
       .sort({ createdAt: -1 });
   }
