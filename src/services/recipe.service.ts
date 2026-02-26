@@ -46,7 +46,7 @@ export class RecipeService {
     return recipeRepository.getRecipesByUser(userId);
   }
 
-  async updateRecipe(id: string, userId: string, data: UpdateRecipeDTO) {
+  async updateRecipe(id: string, userId: string, data: UpdateRecipeDTO, imagePath?: string) {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       throw new HttpError(400, "Invalid recipe id");
     }
@@ -67,6 +67,10 @@ export class RecipeService {
     const updateData: UpdateRecipeDTO = {};
     if (data.title) updateData.title = data.title.trim();
     if (data.description) updateData.description = data.description.trim();
+
+    if (imagePath) {
+      (updateData as any).image = imagePath;
+    }
 
     const updatedRecipe = await recipeRepository.updateRecipeById(id, updateData);
     if (!updatedRecipe) {
