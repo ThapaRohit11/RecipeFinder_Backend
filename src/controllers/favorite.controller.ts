@@ -20,6 +20,7 @@ const toRecipeResponse = (recipe: any) => {
     description: recipe.description,
     imageUrl: recipe.image,
     authorName: getAuthorName(author),
+    authorImageUrl: author.image || "",
     authorUsername: author.username || "unknown",
     authorEmail: author.email || "",
     createdAt: recipe.createdAt,
