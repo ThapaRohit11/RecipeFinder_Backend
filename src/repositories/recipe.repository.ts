@@ -8,14 +8,14 @@ export class RecipeRepository {
 
   async getAllRecipes(): Promise<IRecipe[]> {
     const recipes = await RecipeModel.find()
-      .populate("createdBy", "username firstName lastName email")
+      .populate("createdBy", "username firstName lastName email image")
       .sort({ createdAt: -1 });
 
     return recipes.filter((recipe: any) => recipe.createdBy && recipe.createdBy._id);
   }
 
   async getRecipeById(id: string): Promise<IRecipe | null> {
-    const recipe = await RecipeModel.findById(id).populate("createdBy", "username firstName lastName email");
+    const recipe = await RecipeModel.findById(id).populate("createdBy", "username firstName lastName email image");
 
     if (!recipe || !(recipe as any).createdBy || !(recipe as any).createdBy._id) {
       return null;
@@ -26,14 +26,14 @@ export class RecipeRepository {
 
   async getRecipesByUser(userId: string): Promise<IRecipe[]> {
     const recipes = await RecipeModel.find({ createdBy: userId })
-      .populate("createdBy", "username firstName lastName email")
+      .populate("createdBy", "username firstName lastName email image")
       .sort({ createdAt: -1 });
 
     return recipes.filter((recipe: any) => recipe.createdBy && recipe.createdBy._id);
   }
 
   async updateRecipeById(id: string, data: Partial<IRecipe>): Promise<IRecipe | null> {
-    return RecipeModel.findByIdAndUpdate(id, data, { new: true }).populate("createdBy", "username firstName lastName email");
+    return RecipeModel.findByIdAndUpdate(id, data, { new: true }).populate("createdBy", "username firstName lastName email image");
   }
 
   async deleteRecipeById(id: string): Promise<boolean> {
