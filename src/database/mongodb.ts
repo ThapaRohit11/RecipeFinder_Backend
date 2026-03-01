@@ -21,3 +21,5 @@ export const connectDatabase = async () => {
     console.log("✅ In-memory MongoDB started for local development");
   }
 };
+
+export default connectDatabase;
